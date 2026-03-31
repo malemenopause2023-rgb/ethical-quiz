@@ -221,7 +221,6 @@ function selectAnswer(index) {
     delay = AUTO_NEXT_DELAY;
   } else {
     btns[index].classList.add('wrong');
-    btns[q.answer].classList.add('correct');
     wrongList.push({ q: q.q, correct: q.choices[q.answer] });
     feedback.textContent = '✗ 不正解';
     feedback.className = 'feedback wrong';
