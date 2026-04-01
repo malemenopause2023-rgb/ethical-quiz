@@ -245,10 +245,6 @@ async function showResult() {
   const pct = Math.round((score / QUIZ_COUNT) * 100);
   const gradeInfo = grades.find(g => pct >= g.min) || grades[grades.length - 1];
 
-  await fetch('/api/save-quiz', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ score, total: QUIZ_COUNT, percent: pct, grade: gradeInfo.grade })
   });
 
   setTimeout(() => {
