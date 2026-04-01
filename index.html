@@ -71,17 +71,16 @@
   <div id="screen-top" class="card">
     <div class="earth-wrap"><span class="earth">🌍</span></div>
     <div class="badge">ETHICAL QUIZ</div>
-    <h1>エシカルクイズ基本編</h1>
+    <h1>エシカルクイズ</h1>
     <p class="desc">様々なカテゴリーから20問がランダムに出題されます。あなたのエシカルレベルを診断しましょう！</p>
     <div class="info-box">
       <div class="info-box-title">📋 クイズについて</div>
       <div class="info-box-body">
-        出題数：20問<br>
+        出題数：20問（50問からランダム）<br>
         形式：3択クイズ<br>
         判定：エシカルレベル A〜G
       </div>
     </div>
-    <p class="note">※結果は匿名で記録されます。</p>
     <button class="start-btn" id="start-btn">クイズをはじめる 🌱</button>
   </div>
 
@@ -133,8 +132,8 @@
 <script src="questions.js"></script>
 <script>
 const QUIZ_COUNT = 20;
-const AUTO_NEXT_DELAY = 1200; // 正解時の自動送り（ミリ秒）
-const AUTO_NEXT_DELAY_WRONG = 2000; // 不正解時の自動送り（ミリ秒）
+const AUTO_NEXT_DELAY = 1200;
+const AUTO_NEXT_DELAY_WRONG = 2000;
 
 const grades = [
   { min: 95, grade: 'A', label: 'エシカルマスター 🌟', earth: '🌍', message: '地球は今日も美しく輝いています。', comment: '素晴らしい！地球と社会への深い理解をお持ちです。\nあなたの行動が世界をより良くしています。\nぜひ周りの人にも伝えていきましょう！' },
@@ -181,10 +180,10 @@ function showQuestion() {
   const q = quizQuestions[currentIndex];
   const pct = (currentIndex / QUIZ_COUNT) * 100;
 
-  document.getElementById('q-progress').textContent = `問題 ${currentIndex + 1} / ${QUIZ_COUNT}`;
+  document.getElementById('q-progress').textContent = '問題 ' + (currentIndex + 1) + ' / ' + QUIZ_COUNT;
   document.getElementById('q-cat').textContent = q.category;
   document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('q-num').textContent = `Q${currentIndex + 1}`;
+  document.getElementById('q-num').textContent = 'Q' + (currentIndex + 1);
   document.getElementById('q-text').textContent = q.q;
 
   const choicesEl = document.getElementById('choices');
@@ -215,7 +214,7 @@ function selectAnswer(index) {
   if (index === q.answer) {
     score++;
     btns[index].classList.add('correct');
-   feedback.textContent = '✅ 正解！';
+    feedback.textContent = '✅ 正解！';
     feedback.className = 'feedback correct';
     feedback.style.display = 'block';
     delay = AUTO_NEXT_DELAY;
@@ -228,7 +227,6 @@ function selectAnswer(index) {
     delay = AUTO_NEXT_DELAY_WRONG;
   }
 
-  // 自動で次へ
   setTimeout(() => {
     currentIndex++;
     if (currentIndex >= QUIZ_COUNT) {
@@ -239,33 +237,30 @@ function selectAnswer(index) {
   }, delay);
 }
 
-async function showResult() {
+function showResult() {
   showScreen('screen-loading');
 
   const pct = Math.round((score / QUIZ_COUNT) * 100);
   const gradeInfo = grades.find(g => pct >= g.min) || grades[grades.length - 1];
 
-  });
-
   setTimeout(() => {
     document.getElementById('result-earth').textContent = gradeInfo.earth;
     document.getElementById('result-grade').textContent = gradeInfo.grade;
-    document.getElementById('result-grade').className = `result-grade grade-${gradeInfo.grade}`;
+    document.getElementById('result-grade').className = 'result-grade grade-' + gradeInfo.grade;
     document.getElementById('result-label').textContent = gradeInfo.label;
     document.getElementById('result-message').textContent = gradeInfo.message;
     document.getElementById('result-score').textContent = score;
-    document.getElementById('result-percent').textContent = `正解率 ${pct}%`;
+    document.getElementById('result-percent').textContent = '正解率 ' + pct + '%';
     document.getElementById('result-comment').textContent = gradeInfo.comment;
 
-    // 不正解一覧
     const wrongEl = document.getElementById('wrong-list');
     if (wrongList.length > 0) {
-      wrongEl.innerHTML = `<div class="wrong-list-title">❌ 不正解だった問題（${wrongList.length}問）</div>`
+      wrongEl.innerHTML = '<div class="wrong-list-title">❌ 不正解だった問題（' + wrongList.length + '問）</div>'
         + wrongList.map(w =>
-          `<div class="wrong-item">
-            <div class="wrong-item-q">Q. ${w.q}</div>
-            <div class="wrong-item-a">✅ 正解：${w.correct}</div>
-          </div>`
+          '<div class="wrong-item">'
+          + '<div class="wrong-item-q">Q. ' + w.q + '</div>'
+          + '<div class="wrong-item-a">✅ 正解：' + w.correct + '</div>'
+          + '</div>'
         ).join('');
     } else {
       wrongEl.innerHTML = '<div style="text-align:center;color:#2ecc71;font-weight:700;padding:12px;">🎉 全問正解！素晴らしい！</div>';
